@@ -62,8 +62,6 @@ def index():
                 'icon': image_url
             })
 
-        item.setProperty('IsPlayable', 'true')
-
         labels = {
             'title': title,
             'plot': attrs.get('description'),
@@ -72,6 +70,10 @@ def index():
         }
 
         item.setInfo('Video', labels)
+
+        item.setProperty('IsPlayable', 'true')
+        item.setProperty('inputstreamaddon', 'inputstream.adaptive')
+        item.setProperty('inputstream.adaptive.manifest_type', 'hls')
 
         addDirectoryItem(
             plugin.handle,
