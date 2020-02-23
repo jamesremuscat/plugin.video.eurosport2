@@ -23,6 +23,14 @@ class Eurosport(object):
             ).json()
         )
 
+    def playback_info(self, video_id):
+        return self.session.get(
+            '{}/playback/v2/videoPlaybackInfo/{}?usePreAuth=true'.format(
+                ROOT_URL,
+                video_id
+            )
+        ).json()
+
 
 class EurosportResponse(object):
     def __init__(self, data):
@@ -51,3 +59,20 @@ class EurosportResponse(object):
             filterMethod,
             self._data.get('included', [])
         )
+
+    def images(self):
+        return filter(
+            lambda o: o.get('type') == 'image',
+            self._data.get('included', [])
+        )
+
+    def get_image_url(self, id):
+        wanted_images = list(
+            filter(
+                lambda i: i['id'] == id,
+                self.images()
+            )
+        )
+        if len(wanted_images) > 0:
+            return wanted_images[0]['attributes'].get('src')
+        return None
