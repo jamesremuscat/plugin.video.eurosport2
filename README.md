@@ -1,13 +1,62 @@
-# Welcome to your addon
+# Eurosport Player proof-of-concept for Kodi
 
-1. You might want to move this folder into the kodi addon folder for convinience when debugging. It might also be needed to be `enabled` inside of the kodi addon browser.
-2. Now start coding! Just open up the `.py` file in this folder and create what you would like Kodi to do! If you're creating a plugin, please check out [this kodi routing framework](https://github.com/tamland/kodi-plugin-routing) and copy a version of that module to your kodi addon folder.
-3. Write some tests, maybe? Don't forget to activate [travis](https://travis-ci.org/) access to your repository. We've created a test folder and a travis config file for that, otherwise just delete those ;)
-4. You might want to look at your `addon.xml` it should already be filled, but you will need to understand what your doing and might want to fill in some more info. So read up [here](http://kodi.wiki/view/Addon.xml).
-5. Do you want some settings for your addon? Check the `settings.xml` in the resources folder. And read up [here](http://kodi.wiki/view/Settings.xml).
-6. Read [this info](http://kodi.wiki/view/Add-on_structure#icon.png) and drop an icon for your addon into the `resource` folder and name it `icon.png`.
-7. Read [this](http://kodi.wiki/view/Add-on_structure#fanart.jpg) and drop a addon background into the `resource` folder and name it `fanart.jpg`.
-8. End up with a beautiful Kodi addon! Good for you :) Maybe you want to [share it with us](http://kodi.wiki/view/Submitting_Add-on_updates_on_Github)?
+**You must have a valid subscription to Eurosport Player in order to use this
+plugin.**
 
-### Debugging
-To get the debug logging to work, just set the global kodi logging to true and the debug logging in your addons settings.
+This plugin is not created, supported or endorsed by Eurosport.
+
+## Installation
+
+The [usual procedure for Kodi plugins](https://kodi.wiki/view/HOW-TO:Install_add-ons_from_zip_files) -
+ultimately, you should end up with a copy of this repo in your Kodi plugins
+directory (`~/.kodi/addons` or similar).
+
+This plugin requires:
+
+- dateutil
+- inputstreamhelper
+- requests
+- InputStream Adaptive
+
+If you don't already have them, you can install them via this plugin's
+information page within Kodi.
+
+## Authentication
+
+I've not even attempted to solve the "login requires captcha" problem, so you
+need to log in to the Eurosport Player website and copy your authentication
+token to the plugin settings.
+
+- Log in to www.eurosportplayer.com
+- Open up your browser's dev tools and view cookies
+- The cookie you want is called `st` - it should have a value starting `eyJ0`
+- Copy that value into the addon settings - either via the Kodi web interface's
+  "send text to Kodi" option or by editing the file
+  `~/.kodi/userdata/addon_data/plugin.video.eurosport2/settings.xml`
+
+As far as I can tell, that token is valid for the lifetime of your subscription
+and doesn't expire (but I could be wrong).
+
+## Limitations
+
+- Only videos available on the current "schedule" page are listed; I've not yet
+made any attempt to access video on demand or previously scheduled events.
+- Error handling is minimal, if extant at all.
+- I don't make much use of Eurosport's video categorisation system; might be quite
+nice to do so.
+- Probably more that I can't think of right now
+
+This is just a proof-of-concept (mostly written because I wanted to watch the
+WEC stream without connecting a laptop to my TV) so there are many ways it could
+be improved / expanded!
+
+## Acknowledgements
+
+Inspiration taken from
+[the original Eurosport Player plugin by JinRonin](
+  https://github.com/JinRonin/plugin.video.eurosportplayer
+); the `2` in this plugin's name is to distinguish it from that original.
+
+## License
+
+This addon is licensed under the MIT licence - see `LICENSE` for details.
