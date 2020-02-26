@@ -64,8 +64,6 @@ class EurosportResponse(object):
 
             if o.get('type') != 'video':
                 return False
-            if not onlyAvailable:
-                return True
 
             availability = o.get('attributes', {}).get('availabilityWindows', [])
             if len(availability) > 0:
@@ -75,7 +73,7 @@ class EurosportResponse(object):
                 now = datetime.datetime.now(tz.tzutc())
                 is_available = av_start <= now
                 o['attributes']['isAvailable'] = is_available
-                return is_available
+                return is_available or not onlyAvailable
 
             return False
 
