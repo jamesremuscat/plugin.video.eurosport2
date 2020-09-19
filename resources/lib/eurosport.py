@@ -13,7 +13,9 @@ class Eurosport(object):
         self.session = requests.Session()
 
         self.session.headers = {
-            'cookie': 'st={}'.format(token)
+            'cookie': 'st={}'.format(token),
+            'x-disco-client': 'WEB:UNKNOWN:esplayer:prod',
+            'x-disco-params': 'realm=eurosport,,'
         }
 
     def collection(self, collection_id, params={}):
