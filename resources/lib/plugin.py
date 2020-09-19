@@ -43,7 +43,7 @@ def listitem_from_video(schedule, video, include_start_time=False):
     attrs = video['attributes']
 
     if attrs.get('broadcastType') == 'LIVE':
-        title = 'Live: {}'.format(attrs.get('name'))
+        title = 'Live: {}'.format(attrs.get('name').encode('utf-8').strip())
     else:
         title = attrs.get('name')
 
