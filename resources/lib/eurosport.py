@@ -13,8 +13,22 @@ class Eurosport(object):
         self.session = requests.Session()
 
         self.session.headers = {
-            'cookie': 'st={}'.format(token)
+            'cookie': 'st={}'.format(token),
+            'x-disco-client': 'WEB:UNKNOWN:esplayer:prod',
+            'x-disco-params': 'realm=eurosport,,'
         }
+
+    def collection(self, collection_id, params={}):
+        args = ['{}={}'.format(k, v) for k, v in params.items()]
+        return EurosportResponse(
+            self.session.get(
+                '{}/cms/collections/{}?{}'.format(
+                    ROOT_URL,
+                    collection_id,
+                    '&'.join(args)
+                )
+            ).json()
+        )
 
     def schedule(self):
         return EurosportResponse(
@@ -36,22 +50,32 @@ class EurosportResponse(object):
     def __init__(self, data):
         self._data = data
 
+    def find_alias(self, alias_name):
+        candidates = list(filter(
+            lambda o: o.get('attributes', {}).get('alias') == alias_name,
+            self._data.get('included', [])
+        ))
+        if len(candidates) > 0:
+            return candidates[0]
+        else:
+            return None
+
     def videos(self, onlyAvailable=True):
 
         def filterMethod(o):
 
             if o.get('type') != 'video':
                 return False
-            if not onlyAvailable:
-                return True
 
             availability = o.get('attributes', {}).get('availabilityWindows', [])
             if len(availability) > 0:
                 av_window = availability[0]
                 av_start = parse_date(av_window['playableStart'])
-                av_end = parse_date(av_window['playableEnd'])
+                # NB Videos continue to be available after 'playableEnd'... *shrug*
                 now = datetime.datetime.now(tz.tzutc())
-                return av_start <= now <= av_end
+                is_available = av_start <= now
+                o['attributes']['isAvailable'] = is_available
+                return is_available or not onlyAvailable
 
             return False
 
@@ -76,3 +100,28 @@ class EurosportResponse(object):
         if len(wanted_images) > 0:
             return wanted_images[0]['attributes'].get('src')
         return None
+
+    def get_included_by_id(self, id):
+        candidates = list(filter(
+            lambda o: o.get('id') == id,
+            self._data.get('included', [])
+        ))
+        if len(candidates) > 0:
+            return candidates[0]
+        else:
+            return None
+
+    def get_relations(self, relation_type):
+        relationships = list(
+            filter(
+                lambda r: r.get('type') == relation_type,
+                self._data.get('relationships')
+            )
+        )
+
+        return list(
+            map(
+                lambda r: self.get_included_by_id(r['id']),
+                relationships
+            )
+        )
