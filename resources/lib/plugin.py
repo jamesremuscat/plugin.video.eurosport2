@@ -2,13 +2,10 @@
 
 import dateutil
 import logging
-import requests
 import routing
-import simplejson
 import xbmcaddon
 
 from datetime import date, timedelta
-from resources.lib import kodiutils, kodilogging
 from resources.lib.eurosport import Eurosport
 from xbmcgui import ListItem
 from xbmcplugin import addDirectoryItem, endOfDirectory, setContent, setResolvedUrl
@@ -16,7 +13,6 @@ from xbmcplugin import addDirectoryItem, endOfDirectory, setContent, setResolved
 
 ADDON = xbmcaddon.Addon()
 logger = logging.getLogger(ADDON.getAddonInfo('id'))
-kodilogging.config()
 plugin = routing.Plugin()
 
 setContent(plugin.handle, 'videos')

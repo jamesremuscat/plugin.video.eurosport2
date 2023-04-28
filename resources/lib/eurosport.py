@@ -79,15 +79,19 @@ class EurosportResponse(object):
 
             return False
 
-        return filter(
-            filterMethod,
-            self._data.get('included', [])
+        return list(
+            filter(
+                filterMethod,
+                self._data.get('included', [])
+            )
         )
 
     def images(self):
-        return filter(
-            lambda o: o.get('type') == 'image',
-            self._data.get('included', [])
+        return list(
+            filter(
+                lambda o: o.get('type') == 'image',
+                self._data.get('included', [])
+            )
         )
 
     def get_image_url(self, id):
