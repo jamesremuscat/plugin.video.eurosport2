@@ -39,7 +39,7 @@ def listitem_from_video(schedule, video, include_start_time=False):
     attrs = video['attributes']
 
     if attrs.get('broadcastType') == 'LIVE':
-        title = 'Live: {}'.format(attrs.get('name').encode('utf-8').strip())
+        title = 'Live: {}'.format(attrs.get('name').strip())
     else:
         title = attrs.get('name')
 
@@ -48,7 +48,7 @@ def listitem_from_video(schedule, video, include_start_time=False):
         parsed_start_time = dateutil.parser.parse(start_time)
         title = '{} {}'.format(
             parsed_start_time.strftime('%H:%M'),
-            title.encode('utf-8')
+            title
         )
 
     item = ListItem(title)
@@ -93,7 +93,7 @@ def video_sort_key(video, liveFirst=True):
     attrs = video['attributes']
     if liveFirst and attrs.get('broadcastType') == 'LIVE':
         # sort live videos first
-        return -1
+        return '0'
     return attrs.get('scheduleStart')
 
 
